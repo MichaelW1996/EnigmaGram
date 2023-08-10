@@ -61,8 +61,6 @@ const dial2 = {
   24: 17,
   25: 8,
 };
-
-const letter2ind = (letter) => {
   const alphabet = [
     "A",
     "B",
@@ -90,14 +88,35 @@ const letter2ind = (letter) => {
     "X",
     "Y",
     "Z",
-  ];
+  ]
+const letter2ind = (letter) => {
+  if(letter==" "){
+    return " "
+  } else {
   let index = alphabet.indexOf(letter);
-  return index;
+  return index;}
 };
 
+
+const inds2words = (WordInd) => {
+  let WordOut=""
+  let wordArr=[]
+  WordInd.forEach(int => {
+    if(int==" "){
+      wordArr.push(" ")
+    } else {
+    wordArr.push(alphabet[int])
+    }
+    WordOut = wordArr.join("")
+    
+  }),console.log(WordOut);
+}
 // console.log(letter2ind("F"));
 
 const dialconvert = (index, dial) => {
+  if(index == " "){
+    return " "
+  } else {
   //asks what dial we are on & input index, written in a way to be usable for all dials multiple times
   let newi = index + dial.pos; //new index is equal to the input index + the position of the dial
   if (newi >= 26) {
@@ -105,7 +124,34 @@ const dialconvert = (index, dial) => {
     newi -= 26;
   }
   let swapi = dial[newi]; //swapped index is the new index swapped to its value in the dial
-  return swapi;
+  dial.pos++
+  if (dial.pos >= 26) {
+    //if the index plus position is 26 or greater, loop back to start
+    dial.pos -= 26;
+  }
+  return swapi;}
 };
 
-console.log(dialconvert(letter2ind("Z"), dial1));
+
+// console.log(dialconvert(letter2ind(letter), dials[0]))
+
+const wordConvert = (word,dials) => {  
+  let WordInd = [] //empty array to hold the index of letters in message
+  let WordArr = word.toUpperCase().split("") //splits up the input to individual caps letters
+  WordArr.forEach(letter => { //for each letter in the word,
+    WordInd.push(letter2ind(letter)) //push the interger value of each letter to the array
+  });
+  for (let index = 0; index < WordInd.length; index++) {
+    const LetInd = WordInd[index];
+    dials.forEach(dial => {
+      WordInd[index] = dialconvert(LetInd,dial)
+    })    
+  }
+  inds2words(WordInd)
+}
+
+wordConvert("Holly smells",[dial1])
+
+
+
+//the lettter M doesnt work for whatever reason??
